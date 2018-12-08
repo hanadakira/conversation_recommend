@@ -2,17 +2,22 @@
 import json
 from watson_developer_cloud import NaturalLanguageUnderstandingV1
 from watson_developer_cloud.natural_language_understanding_v1 import Features, EmotionOptions, KeywordsOptions, EntitiesOptions
-from bottle import route, run, template
 
 class NaturalLanguageUnderstanding():
     def __init__(self):
+        #インスタンス生成
         self.natural_language_understanding = NaturalLanguageUnderstandingV1(
             version='2018-12-08',
             iam_apikey='5syXvO8kxI962t8eofpVJFp5_K5dH-3c2iqICD4z03vO',
             url='https://gateway.watsonplatform.net/natural-language-understanding/api'
         )
     def analyze_sentence(self, sentence:str):
+        """
+        sentence: 会話文
+        return: list
+        """
         result = []
+        #文字列から感情分析
         response = self.natural_language_understanding.analyze(
             text=sentence,
             #text= 'I like dog, but i don\'t ,nooooooooooooooooooooooo',
