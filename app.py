@@ -1,18 +1,34 @@
 # -*- coding: utf-8 -*-
-
-from flask import Flask, render_template, request, redirect, url_for
-from bottle import get, post, request, run, route
+import requests
+from flask import Flask, render_template,request, redirect, url_for
+from bottle import get, post, run, route
 from module.language_understanding import NaturalLanguageUnderstanding
+from module.tweet_research import recommend_tweet
 
 app = Flask(__name__)
 
-@app.route('/test',methods=['GET'])
+@app.route('/test',methods=['GET','POST'])
 def test_post():
-    print("っっっっっっっっっっ")
-    # msg = request.params.decode().get('message')
-    # analyze = NaturalLanguageUnderstanding()
-    # result = analyze.analyze_sentence(msg)
-    return "bbbbbbbbbbbbbbbbbbbbbb"
+    analyze = NaturalLanguageUnderstanding()
+    twitter = recommend_tweet()
+    msg = request.values.get("message")
+    print(msg)
+    analyze = NaturalLanguageUnderstanding()
+    sentiment_info = analyze.analyze_sentence(msg)
+    print("感情分析結果")
+    print(sentiment_info)
+    tweet = twitter.select_tweet(sentiment_info[0])
+    print("gggggggggggggggggggg")
+    print(tweet[0])
+    base_url = "https://publish.twitter.com/oembed?url="
+    tweet_url = tweet[0]
+    url = base_url + tweet_url
+    request_result = requests.get(url)
+    json_result = request_result.json()
+    tweet_html = json_result["html"]
+    print("aaaaaaaaaafinfinfinfinfinfffffffffffffff:")
+    print(tweet_html)
+    return tweet_html
 
 # 音声認識
 @app.route('/')
@@ -83,6 +99,7 @@ def index():
               console.log(msg)
               //tweets.innerHTML += '<div>'+msg+'</div>';
               console.log("ccccccccccccccccccccc")
+              console.log(msg)
               $.ajax({
                 type:"GET",
                 url:"/test",
