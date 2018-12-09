@@ -12,22 +12,15 @@ def test_post():
     analyze = NaturalLanguageUnderstanding()
     twitter = recommend_tweet()
     msg = request.values.get("message")
-    print(msg)
     analyze = NaturalLanguageUnderstanding()
     sentiment_info = analyze.analyze_sentence(msg)
-    print("感情分析結果")
-    print(sentiment_info)
     tweet = twitter.select_tweet(sentiment_info[0])
-    print("gggggggggggggggggggg")
-    print(tweet[0])
     base_url = "https://publish.twitter.com/oembed?url="
     tweet_url = tweet[0]
     url = base_url + tweet_url
     request_result = requests.get(url)
     json_result = request_result.json()
     tweet_html = json_result["html"]
-    print("aaaaaaaaaafinfinfinfinfinfffffffffffffff:")
-    print(tweet_html)
     return tweet_html
 
 # 音声認識
