@@ -9,11 +9,17 @@ app = Flask(__name__)
 
 @app.route('/test',methods=['GET','POST'])
 def test_post():
+    #会話文から感情分析 インスタンス生成
     analyze = NaturalLanguageUnderstanding()
     twitter = recommend_tweet()
+
+    #request parameterの取得
     msg = request.values.get("message")
-    analyze = NaturalLanguageUnderstanding()
+
+    #文字から感情分析
     sentiment_info = analyze.analyze_sentence(msg)
+
+    #感情分析
     tweet = twitter.select_tweet(sentiment_info[0])
     base_url = "https://publish.twitter.com/oembed?url="
     tweet_url = tweet[0]
