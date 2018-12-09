@@ -1,4 +1,4 @@
-import json, twitter_config #標準のjsonモジュールとconfig.pyの読み込み
+import json#標準のjsonモジュールとconfig.pyの読み込み
 from requests_oauthlib import OAuth1Session #OAuthのライブラリの読み込み
 from watson_developer_cloud import NaturalLanguageUnderstandingV1
 from watson_developer_cloud.natural_language_understanding_v1 import Features, EmotionOptions, KeywordsOptions, EntitiesOptions
@@ -11,8 +11,8 @@ class NaturalLanguageUnderstanding():
         #インスタンス生成
         self.natural_language_understanding = NaturalLanguageUnderstandingV1(
             version='2018-12-09',
-            iam_apikey='GueChvZF4avWDeYj_yuWJKquTICcjxHfIwB1PswKdX4h',
-            url='https://gateway.watsonplatform.net/natural-language-understanding/api'
+            iam_apikey={},
+            url={}
         )
     def analyze_sentence(self, sentence:str):
         """
@@ -78,10 +78,10 @@ class ToneAnalyzer():
 
 class recommend_tweet():
     def __init__(self):
-        CK = twitter_config.CONSUMER_KEY
-        CS = twitter_config.CONSUMER_SECRET
-        AT = twitter_config.ACCESS_TOKEN
-        ATS = twitter_config.ACCESS_TOKEN_SECRET
+        CK = {}
+        CS = {}
+        AT = {}
+        ATS = {}
         self.twitter = OAuth1Session(CK, CS, AT, ATS) #認証処理
 
     def select_tweet(self, info):
@@ -94,7 +94,7 @@ class recommend_tweet():
         #val = list(dic.values())
         #i = val.index(max(val))
         feeling = info["label"]
-
+        kw = info["keyword"]
         '''
         if feeling == "negative":
             add_key = "クソ"
@@ -103,7 +103,7 @@ class recommend_tweet():
         '''
 
         #params = {"q" : "クリスマス 話題" + " min_faves:100", "lang" : "ja", "locale" : "ja", "result_type" : "popular", 'count' : 30}
-        params = {"q" : "クリスマス 話題", "lang" : "ja", "locale" : "ja", "result_type" : "popular", 'count' : 100}
+        params = {"q" : "クリスマス" + kw, "lang" : "ja", "locale" : "ja", "result_type" : "popular", 'count' : 100}
 
         req = self.twitter.get(url, params = params)
 
@@ -122,7 +122,7 @@ class recommend_tweet():
                     if label == feeling:
                         cnt += 1
 
-                if cnt >= 5:
+                if cnt:
                     tweet_url.append("https://twitter.com/" + screen_name + "/status/" + str(id_num))
         else:
             print("ERROR: %d" % req.status_code)
