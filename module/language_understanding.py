@@ -8,8 +8,8 @@ class NaturalLanguageUnderstanding():
         #インスタンス生成
         self.natural_language_understanding = NaturalLanguageUnderstandingV1(
             version='2018-12-08',
-            iam_apikey='5syXvO8kxI962t8eofpVJFp5_K5dH-3c2iqICD4z03vO',
-            url='https://gateway.watsonplatform.net/natural-language-understanding/api'
+            iam_apikey={},
+            url={}
         )
     def analyze_sentence(self, sentence:str):
         """

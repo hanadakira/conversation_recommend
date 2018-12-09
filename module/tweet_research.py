@@ -147,5 +147,5 @@ info = [
     }
 ]
 
-twitter = recommend_tweet()
-tweet = twitter.select_tweet(info[0])
+#twitter = recommend_tweet()
+#tweet = twitter.select_tweet(info[0])

@@ -4,16 +4,32 @@ from flask import Flask, render_template,request, redirect, url_for
 from bottle import get, post, run, route
 from module.language_understanding import NaturalLanguageUnderstanding
 from module.tweet_research import recommend_tweet
+from module import scraping
 
 app = Flask(__name__)
 
 @app.route('/test',methods=['GET','POST'])
 def test_post():
+    #「クリスマス　話題」でスクレイピング
+    result = scraping.get_search_results()
+    titles = result[0];
+    urls = result[1]
+    title = titles[0]
+    url = urls[0]
+    scraping_christmas = {
+        "title":title,
+        "url":url
+    }
+    #会話文から感情分析 インスタンス生成
     analyze = NaturalLanguageUnderstanding()
     twitter = recommend_tweet()
+
+    #request parameterの取得
     msg = request.values.get("message")
-    analyze = NaturalLanguageUnderstanding()
+
+    #文字から感情分析
     sentiment_info = analyze.analyze_sentence(msg)
+    #感情分析
     tweet = twitter.select_tweet(sentiment_info[0])
     base_url = "https://publish.twitter.com/oembed?url="
     tweet_url = tweet[0]
@@ -51,7 +67,6 @@ def index():
               var hh = ("0"+date.getHours()).slice(-2);
               var min = ("0"+date.getMinutes()).slice(-2);
               var sec = ("0"+date.getSeconds()).slice(-2);
-
               var time = hh+":"+min+":"+sec;
               return time;
             }
@@ -101,9 +116,10 @@ def index():
               });
           };
           // カンペTweetを表示
-          var tweet_func = function(reply){
+          var tweet_func = function(reply,reply2){
+              console.log(reply)
               var tweets = document.getElementById('tweets');
-              tweets.innerHTML += '<div>'+reply+'</div>';
+              tweets.innerHTML += '<div class="reply" style="padding-left:50%">'+reply+'</div>';
           }
         </script>
         </body>
