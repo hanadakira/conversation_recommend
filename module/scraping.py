@@ -1,3 +1,4 @@
+
 #%%
 from bs4 import BeautifulSoup
 import requests
@@ -22,6 +23,6 @@ def get_search_results_df(keyword):
 def query_string_remove(url):
   return url[:url.find('&')]
 
-keyword = "クリスマス"
+keyword = "クリスマス 話題"
 search_results_df = get_search_results_df(keyword)
 csv_data = search_results_df.to_csv("Christmas_data.csv", encoding="utf-8_sig")
